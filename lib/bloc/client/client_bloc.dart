@@ -1,8 +1,11 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:grafis_test_app/core/client.dart';
+import 'package:grafis_test_app/service/client_service.dart';
 
 class ClientBloc extends Bloc<ClientBlocEvent, ClientBlocState>{
+
+  ClientService clientService = ClientService.instance;
 
   ClientBlocState get initialState => InitialClientBlocState();
 
@@ -11,8 +14,8 @@ class ClientBloc extends Bloc<ClientBlocEvent, ClientBlocState>{
     if(event is ReloadClients){
       try{
         yield LoadingClients();
-        //TODO: clientService.getClients
-        yield ClientsLoaded();
+        var clients = await clientService.get();
+        yield ClientsLoaded(clients: clients);
       } catch(e, s){
         print("Exception: $e\n");
         print("Stack: $s\n");
