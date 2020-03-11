@@ -23,7 +23,7 @@ class ProductService{
     //TODO
   }
 
-  Future<Product> add({Product Product}) async{
+  Future<Product> add({Product product}) async{
     //TODO
   }
 }
