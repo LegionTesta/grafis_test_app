@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_register_bloc.dart';
@@ -14,9 +15,66 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
 
   ClientRegisterBloc _clientRegisterBloc;
 
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   @override
   void initState() {
     _clientRegisterBloc = ClientRegisterBloc();
+    _clientRegisterBloc.listen((state) {
+      if(state is RegisteringClient){
+        showDialog(
+          context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              content: Text("Carregando..."),
+            );
+          }
+        );
+      }
+      if(state is ClientRegistered){
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                content: Text("O cliente foi registrado!"),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Ok"),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            }
+        );
+        nameController.text = "";
+        emailController.text = "";
+      }
+      if(state is ClientNotRegistered){
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                content: Text("O cliente não foi registrado!"),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Ok"),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            }
+        );
+      }
+    });
     super.initState();
   }
 
@@ -34,15 +92,6 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
               if(state is InitialClientRegisterBlocState){
                 return buildRegisterClientForm(context);
               }
-              if(state is RegisteringClient){
-                return buildAwaitingResponse(context);
-              }
-              if(state is ClientRegistered){
-                return buildRegisterClientForm(context);
-              }
-              if(state is ClientNotRegistered){
-                return buildRegisterClientForm(context);
-              }
               return Container();
             }
           ),
@@ -54,12 +103,56 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
   Widget buildRegisterClientForm(BuildContext context){
 
     return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.red
-      ),
-      child: GestureDetector(
-        onTap: onTap,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: "Insira o nome do cliente",
+                  labelText: "Nome"
+                ),
+                validator: (value){
+                  if(value.isEmpty)
+                    return "O campo Nome não pode estar vazio";
+                  return null;
+                },
+              ),
+            ),
+            Container(
+              child: TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                    icon: Icon(Icons.email),
+                    hintText: "Insira o email do cliente",
+                    labelText: "Email"
+                ),
+                validator: (value){
+                  if(value.isEmpty)
+                    return "O campo Email não pode estar vazio";
+                  return null;
+                },
+              ),
+            ),
+            Container(
+              child: RaisedButton(
+                onPressed: (){
+                  if(_formKey.currentState.validate()){
+                    _clientRegisterBloc.add(RegisterClient(client: Client(
+                      name: nameController.text,
+                      email: emailController.text
+                    )));
+                  }
+                },
+                child: Text("Cadastrar"),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -69,15 +162,11 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
   }
 
   Widget buildClientRegistered(BuildContext context){
-    return Text("foi");
+    
   }
 
   Widget buildClientNotRegistered(BuildContext context){
     return Text("nao foi");
   }
 
-  void onTap(){
-    Client client = Client(name: "Teste", email: "te1st1e@email.com");
-    _clientRegisterBloc.add(RegisterClient(client: client));
-  }
 }
