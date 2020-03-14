@@ -32,7 +32,6 @@ class ProductService{
   }
 
   Future<Product> add({Product product}) async{
-    Product c = Product.fromJson(await productApi.post(body: product.toJson()));
-    print(c.id);
+    return Product.fromJson(await productApi.post(body: product.toJson()));
   }
 }

@@ -32,7 +32,6 @@ class ClientService{
   }
 
   Future<Client> add({Client client}) async{
-    Client c = Client.fromJson(await clientApi.post(body: client.toJson()));
-    print(c.id);
+    return Client.fromJson(await clientApi.post(body: client.toJson()));
   }
 }
