@@ -14,8 +14,8 @@ class ClientRegisterBloc extends Bloc<ClientRegisterBlocEvent, ClientRegisterBlo
     if(event is RegisterClient){
       try{
         yield RegisteringClient();
-        await clientService.add(client: event.client);
-        //await clientService.get();
+        //await clientService.add(client: event.client);
+        await clientService.get();
         yield ClientRegistered();
       } catch(e, s){
         print("Exception: $e\n");

@@ -1,6 +1,6 @@
 
 
-import 'package:grafis_test_app/api/ClientApi.dart';
+import 'package:grafis_test_app/api/client_api.dart';
 import 'package:grafis_test_app/core/client.dart';
 
 class ClientService{
@@ -19,8 +19,12 @@ class ClientService{
   ClientApi clientApi = ClientApi();
 
   Future<List<Client>> get() async{
-    await clientApi.get();
-    return null;
+    List<Map<String, dynamic>> clientsJson = await clientApi.get();
+    print(clientsJson.length);
+    List<Client> clients;
+    clientsJson.forEach((element) => clients.add(Client.fromJson(element)));
+    print(clients.length);
+    return clients;
   }
 
   Future<Client> find({int id}) async{
@@ -28,7 +32,7 @@ class ClientService{
   }
 
   Future<Client> add({Client client}) async{
-    await clientApi.post(body: client.toJson());
-    return null;
+    Client c = Client.fromJson(await clientApi.post(body: client.toJson()));
+    print(c.id);
   }
 }

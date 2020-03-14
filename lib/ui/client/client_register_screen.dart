@@ -77,7 +77,7 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
   }
 
   void onTap(){
-    Client client = Client(name: "Teste", email: "teste@email.com");
+    Client client = Client(name: "Teste", email: "te1st1e@email.com");
     _clientRegisterBloc.add(RegisterClient(client: client));
   }
 }
