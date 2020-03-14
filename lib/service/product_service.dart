@@ -1,5 +1,6 @@
 
 
+import 'package:grafis_test_app/api/product_api.dart';
 import 'package:grafis_test_app/core/product.dart';
 
 class ProductService{
@@ -15,8 +16,15 @@ class ProductService{
     return _instance;
   }
 
+  ProductApi productApi = ProductApi();
+
   Future<List<Product>> get() async{
-    //TODO
+    List<Map<String, dynamic>> productsJson = await productApi.get();
+    print(productsJson.length);
+    List<Product> products;
+    productsJson.forEach((element) => products.add(Product.fromJson(element)));
+    print(products.length);
+    return products;
   }
 
   Future<Product> find({int id}) async{
@@ -24,6 +32,7 @@ class ProductService{
   }
 
   Future<Product> add({Product product}) async{
-    //TODO
+    Product c = Product.fromJson(await productApi.post(body: product.toJson()));
+    print(c.id);
   }
 }
