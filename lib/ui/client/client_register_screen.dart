@@ -156,17 +156,4 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
       ),
     );
   }
-
-  Widget buildAwaitingResponse(BuildContext context){
-    return Text("carregando");
-  }
-
-  Widget buildClientRegistered(BuildContext context){
-    
-  }
-
-  Widget buildClientNotRegistered(BuildContext context){
-    return Text("nao foi");
-  }
-
 }
