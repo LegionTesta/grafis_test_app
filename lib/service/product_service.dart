@@ -20,10 +20,8 @@ class ProductService{
 
   Future<List<Product>> get() async{
     List<Map<String, dynamic>> productsJson = await productApi.get();
-    print(productsJson.length);
-    List<Product> products;
+    List<Product> products = List();
     productsJson.forEach((element) => products.add(Product.fromJson(element)));
-    print(products.length);
     return products;
   }
 

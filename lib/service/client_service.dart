@@ -20,10 +20,8 @@ class ClientService{
 
   Future<List<Client>> get() async{
     List<Map<String, dynamic>> clientsJson = await clientApi.get();
-    print(clientsJson.length);
-    List<Client> clients;
+    List<Client> clients = List();
     clientsJson.forEach((element) => clients.add(Client.fromJson(element)));
-    print(clients.length);
     return clients;
   }
 
