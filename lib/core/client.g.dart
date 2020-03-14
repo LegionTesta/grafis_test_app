@@ -9,7 +9,7 @@ part of 'client.dart';
 Client _$ClientFromJson(Map json) {
   return Client(
     id: json['id'] as int,
-    nome: json['nome'] as String,
+    name: json['name'] as String,
     email: json['email'] as String,
   );
 }
@@ -24,7 +24,7 @@ Map<String, dynamic> _$ClientToJson(Client instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('nome', instance.nome);
+  writeNotNull('name', instance.name);
   writeNotNull('email', instance.email);
   return val;
 }

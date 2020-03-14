@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_register_bloc.dart';
+import 'package:grafis_test_app/core/client.dart';
 
 class ClientRegisterScreen extends StatefulWidget {
   @override
@@ -37,10 +38,10 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
                 return buildAwaitingResponse(context);
               }
               if(state is ClientRegistered){
-                return buildClientRegistered(context);
+                return buildRegisterClientForm(context);
               }
               if(state is ClientNotRegistered){
-                return buildClientNotRegistered(context);
+                return buildRegisterClientForm(context);
               }
               return Container();
             }
@@ -52,17 +53,31 @@ class _ClientRegisterScreenState extends State<ClientRegisterScreen> {
 
   Widget buildRegisterClientForm(BuildContext context){
 
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.red
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+      ),
+    );
   }
 
   Widget buildAwaitingResponse(BuildContext context){
-
+    return Text("carregando");
   }
 
   Widget buildClientRegistered(BuildContext context){
-
+    return Text("foi");
   }
 
   Widget buildClientNotRegistered(BuildContext context){
+    return Text("nao foi");
+  }
 
+  void onTap(){
+    Client client = Client(name: "Teste", email: "teste@email.com");
+    _clientRegisterBloc.add(RegisterClient(client: client));
   }
 }

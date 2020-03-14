@@ -7,10 +7,10 @@ part 'client.g.dart';
 class Client{
 
   int id;
-  String nome;
+  String name;
   String email;
 
-  Client({this.id, this.nome, this.email});
+  Client({this.id, this.name, this.email});
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
   Map<String, dynamic> toJson() => _$ClientToJson(this);
