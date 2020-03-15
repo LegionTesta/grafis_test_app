@@ -16,10 +16,12 @@ class ProductRegisterBloc extends Bloc<ProductRegisterBlocEvent, ProductRegister
         yield RegisteringProduct();
         await productService.add(product: event.product);
         yield ProductRegistered();
+        yield InitialProductRegisterBlocState();
       } catch(e, s){
         print("Exception: $e\n");
         print("Stack: $s\n");
         yield ProductNotRegistered();
+        yield InitialProductRegisterBlocState();
       }
     }
   }

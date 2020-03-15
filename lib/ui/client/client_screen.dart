@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_register_bloc.dart';
 import 'package:grafis_test_app/core/client.dart';
+import 'package:grafis_test_app/ui/menu_drawer.dart';
 
 class ClientScreen extends StatefulWidget {
   @override
@@ -87,6 +88,7 @@ class _ClientScreenState extends State<ClientScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        drawer: MenuDrawer(),
         appBar: AppBar(
           title: Text("Clientes"),
         ),

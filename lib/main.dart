@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grafis_test_app/ui/client/client_register_screen.dart';
 import 'package:grafis_test_app/ui/client/client_screen.dart';
 
 void main() => runApp(MyApp());
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ClientScreen()
+      home: ClientScreen(),
     );
   }
 }
