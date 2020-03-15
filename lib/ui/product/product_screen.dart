@@ -173,7 +173,12 @@ class _ProductScreenState extends State<ProductScreen> {
                   validator: (value){
                     if(value.isEmpty)
                       return "O campo Preço não pode estar vazio.";
-                    return null;
+                    try{
+                      double.parse(value);
+                      return null;
+                    } catch(e){
+                      return "O valor inserido é inválido.";
+                    }
                   },
                 ),
               ),
