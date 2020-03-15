@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grafis_test_app/bloc/product/product_bloc.dart';
 import 'package:grafis_test_app/bloc/product/product_register_bloc.dart';
 import 'package:grafis_test_app/core/product.dart';
+import 'package:grafis_test_app/ui/menu_drawer.dart';
 
 class ProductScreen extends StatefulWidget {
   @override
@@ -90,6 +91,7 @@ class _ProductScreenState extends State<ProductScreen> {
         appBar: AppBar(
           title: Text("Produtos"),
         ),
+        drawer: MenuDrawer(),
         body: Container(
           child: Row(
             children: <Widget>[
