@@ -11,6 +11,7 @@ class ProductBloc extends Bloc<ProductBlocEvent, ProductBlocState>{
 
   @override
   Stream<ProductBlocState> mapEventToState(ProductBlocEvent event) async*{
+
     if(event is ReloadProducts){
       try{
         yield LoadingProducts();
@@ -22,12 +23,25 @@ class ProductBloc extends Bloc<ProductBlocEvent, ProductBlocState>{
         yield ProductsNotLoaded();
       }
     }
+
+    if(event is FilterProducts){
+      yield LoadingProducts();
+      yield ProductsFiltered(products: event.products.where((element) =>
+      (element.desc.toLowerCase().contains(event.filter.toLowerCase()))
+      ).toList());
+    }
   }
 }
 
 abstract class ProductBlocEvent{}
 
 class ReloadProducts extends ProductBlocEvent{}
+
+class FilterProducts extends ProductBlocEvent{
+  final String filter;
+  final List<Product> products;
+  FilterProducts({this.filter, this.products});
+}
 
 abstract class ProductBlocState{}
 
@@ -36,6 +50,11 @@ class LoadingProducts extends ProductBlocState{}
 class ProductsLoaded extends ProductBlocState{
   final List<Product> products;
   ProductsLoaded({this.products});
+}
+
+class ProductsFiltered extends ProductBlocState{
+  final List<Product> products;
+  ProductsFiltered({this.products});
 }
 
 class ProductsNotLoaded extends ProductBlocState{}

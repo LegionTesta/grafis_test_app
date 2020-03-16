@@ -21,6 +21,9 @@ class _ProductScreenState extends State<ProductScreen> {
   TextEditingController descController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
+  List<Product> filteredProducts = List();
+  List<Product> products = List();
+
   @override
   void initState() {
     _productBloc = ProductBloc();
@@ -102,7 +105,13 @@ class _ProductScreenState extends State<ProductScreen> {
                       );
                     }
                     if(state is ProductsLoaded){
-                      return buildProductsList(context, state.products);
+                      filteredProducts = state.products;
+                      products = state.products;
+                      return buildProductsList(context);
+                    }
+                    if(state is ProductsFiltered){
+                      filteredProducts = state.products;
+                      return buildProductsList(context);
                     }
                     return Container();
                   }
@@ -123,21 +132,38 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget buildProductsList(BuildContext context, List<Product> products){
+  Widget buildProductsList(BuildContext context){
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (BuildContext context, index){
-              return Card(
-                child: ListTile(
-                  title: Text(products[index].desc),
-                  subtitle: Text("R\$ ${products[index].price.toStringAsFixed(2)}"),
-                ),
-              );
-            }
-        ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: "Procure por Desc..."
+              ),
+              onChanged: (value){
+                _productBloc.add(FilterProducts(products: products, filter: value));
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: ListView.builder(
+                  itemCount: filteredProducts.length,
+                  itemBuilder: (BuildContext context, index){
+                    return Card(
+                      child: ListTile(
+                        title: Text(filteredProducts[index].desc),
+                        subtitle: Text("R\$ ${filteredProducts[index].price.toStringAsFixed(2)}"),
+                      ),
+                    );
+                  }
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
