@@ -140,7 +140,7 @@ class _ProductScreenState extends State<ProductScreen> {
             padding: EdgeInsets.all(8),
             child: TextField(
               decoration: InputDecoration(
-                  hintText: "Procure por Desc..."
+                  hintText: "Procure por Descrição..."
               ),
               onChanged: (value){
                 _productBloc.add(FilterProducts(products: products, filter: value));

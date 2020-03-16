@@ -20,6 +20,11 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
   ProductBloc _productBloc;
   OrderBloc _orderBloc;
 
+  List<Product> filteredProducts = List();
+  List<Product> products = List();
+  List<Client> filteredClients = List();
+  List<Client> clients = List();
+
   final _amountFormKey = GlobalKey<FormState>();
 
   TextEditingController amountController = TextEditingController();
@@ -54,7 +59,13 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                     );
                   }
                   if(state is ClientsLoaded){
-                    return buildClientsList(context, state.clients);
+                    filteredClients = state.clients;
+                    clients = state.clients;
+                    return buildClientsList(context);
+                  }
+                  if(state is ClientsFiltered){
+                    filteredClients = state.clients;
+                    return buildClientsList(context);
                   }
                   return Container();
                 }
@@ -68,7 +79,13 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                       );
                     }
                     if(state is ProductsLoaded){
-                      return buildProductsList(context, state.products);
+                      filteredProducts = state.products;
+                      products = state.products;
+                      return buildProductsList(context);
+                    }
+                    if(state is ProductsFiltered){
+                      filteredProducts = state.products;
+                      return buildProductsList(context);
                     }
                     return Container();
                   }
@@ -217,121 +234,87 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     return Container();
   }
 
-  Widget buildClientsList(BuildContext context, List<Client> clients){
+  Widget buildClientsList(BuildContext context){
     return Expanded(
-      child: Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: Text("Clientes"),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: "Procure por Nome ou Email..."
               ),
-              Card(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: clients.length,
-                    itemBuilder: (BuildContext context, index){
-                      return ListTile(
-                        title: Text(clients[index].name),
-                        subtitle: Text(clients[index].email),
+              onChanged: (value){
+                _clientBloc.add(FilterClients(clients: clients, filter: value));
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: ListView.builder(
+                  itemCount: filteredClients.length,
+                  itemBuilder: (BuildContext context, index){
+                    return Card(
+                      child: ListTile(
+                        title: Text(filteredClients[index].name),
+                        subtitle: Text(filteredClients[index].email),
                         trailing: RaisedButton(
                           onPressed: (){
-                            _orderBloc.add(SelectClient(client: clients[index]));
+                            _orderBloc.add(SelectClient(client: filteredClients[index]));
                           },
                           child: Text("Selecionar"),
                         ),
-                      );
-                    }
-                ),
+                      ),
+                    );
+                  }
               ),
-            ],
-          ),
-        )
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget buildProductsList(BuildContext context, List<Product> products){
+  Widget buildProductsList(BuildContext context){
     return Expanded(
-      child: Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: Text("Produtos"),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: "Procure por Descrição..."
               ),
-              Card(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: products.length,
-                    itemBuilder: (BuildContext context, index){
-                      return ListTile(
-                        title: Text(products[index].desc),
-                        subtitle: Text("R\$ ${products[index].price.toStringAsFixed(2)}"),
+              onChanged: (value){
+                _productBloc.add(FilterProducts(products: products, filter: value));
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: ListView.builder(
+                  itemCount: filteredProducts.length,
+                  itemBuilder: (BuildContext context, index){
+                    return Card(
+                      child: ListTile(
+                        title: Text(filteredProducts[index].desc),
+                        subtitle: Text("R\$ ${filteredProducts[index].price.toStringAsFixed(2)}"),
                         trailing: RaisedButton(
                           onPressed: (){
-                            _orderBloc.add(SelectProduct(product: products[index]));
+                            _orderBloc.add(SelectProduct(product: filteredProducts[index]));
                           },
                           child: Text("Selecionar"),
-                        )
-                      );
-                    }
-                ),
+                        ),
+                      ),
+                    );
+                  }
               ),
-            ],
-          ),
-        )
+            ),
+          )
+        ],
       ),
     );
   }
 }
-
-/*
-Form(
-                          key: _amountFormKey,
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                child: TextFormField(
-                                  controller: amountController,
-                                  decoration: InputDecoration(
-                                      hintText: "Insira a quantidade do produto",
-                                      labelText: "Quantidade"
-                                  ),
-                                  validator: (value){
-                                    if(value.isEmpty)
-                                      return "O campo Quantidade não pode estar vazio.";
-                                    try{
-                                      if(double.parse(value) < 0)
-                                        return "O valor inserido não pode ser menor que 0.";
-                                      return null;
-                                    } catch(e){
-                                      return "O valor inserido é inválido.";
-                                    }
-                                  },
-                                ),
-                              ),
-                              RaisedButton(
-                                onPressed: (){
-                                  if(_amountFormKey.currentState.validate()){
-                                    _orderBloc.add(AddProduct(
-                                      product: products[index],
-                                      amount: double.parse(amountController.text)
-                                    ));
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                child: Text("Adicionar"),
-                              ),
-                            ],
-                          ),
-                        ),
- */
