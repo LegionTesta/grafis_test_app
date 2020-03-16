@@ -23,6 +23,7 @@ class _ClientScreenState extends State<ClientScreen> {
   TextEditingController emailController = TextEditingController();
 
   List<Client> filteredClients = List();
+  List<Client> clients = List();
 
   @override
   void initState() {
@@ -105,8 +106,13 @@ class _ClientScreenState extends State<ClientScreen> {
                       );
                     }
                     if(state is ClientsLoaded){
+                      clients = state.clients;
                       filteredClients = state.clients;
-                      return buildClientsList(context, state.clients);
+                      return buildClientsList(context);
+                    }
+                    if(state is ClientsFiltered){
+                      filteredClients = state.clients;
+                      return buildClientsList(context);
                     }
                     return Container();
                   }
@@ -127,8 +133,7 @@ class _ClientScreenState extends State<ClientScreen> {
     );
   }
 
-  Widget buildClientsList(BuildContext context, List<Client> clients){
-    var aux = List();
+  Widget buildClientsList(BuildContext context){
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -139,16 +144,7 @@ class _ClientScreenState extends State<ClientScreen> {
                   hintText: "Procure por Nome ou Email..."
               ),
               onChanged: (value){
-                print(aux.length);
-                setState(() {
-                  aux = clients.where((element) =>
-                      (element.name.toLowerCase().contains(value.toLowerCase())) ||
-                      (element.email.toLowerCase().contains(value.toLowerCase()))
-                  ).toList();
-                  print(aux.length);
-                  filteredClients = aux;
-                });
-                setState(() {});
+                _clientBloc.add(FilterClients(clients: clients, filter: value));
               },
             ),
           ),

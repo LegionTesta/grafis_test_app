@@ -11,6 +11,7 @@ class ClientBloc extends Bloc<ClientBlocEvent, ClientBlocState>{
 
   @override
   Stream<ClientBlocState> mapEventToState(ClientBlocEvent event) async*{
+
     if(event is ReloadClients){
       try{
         yield LoadingClients();
@@ -22,12 +23,26 @@ class ClientBloc extends Bloc<ClientBlocEvent, ClientBlocState>{
         yield ClientsNotLoaded();
       }
     }
+
+    if(event is FilterClients){
+      yield LoadingClients();
+      yield ClientsFiltered(clients: event.clients.where((element) =>
+          (element.name.toLowerCase().contains(event.filter.toLowerCase())) ||
+          (element.email.toLowerCase().contains(event.filter.toLowerCase()))
+      ).toList());
+    }
   }
 }
 
 abstract class ClientBlocEvent{}
 
 class ReloadClients extends ClientBlocEvent{}
+
+class FilterClients extends ClientBlocEvent{
+  final String filter;
+  final List<Client> clients;
+  FilterClients({this.filter, this.clients});
+}
 
 abstract class ClientBlocState{}
 
@@ -36,6 +51,11 @@ class LoadingClients extends ClientBlocState{}
 class ClientsLoaded extends ClientBlocState{
   final List<Client> clients;
   ClientsLoaded({this.clients});
+}
+
+class ClientsFiltered extends ClientBlocState{
+  final List<Client> clients;
+  ClientsFiltered({this.clients});
 }
 
 class ClientsNotLoaded extends ClientBlocState{}
