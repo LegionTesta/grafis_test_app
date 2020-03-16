@@ -12,6 +12,11 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
   OrderBlocState get initialState => InitialOrderBlocState();
 
   Stream<OrderBlocState> mapEventToState(OrderBlocEvent event) async*{
+    if(event is SelectProduct){
+      orderService.completeOrder.currentProduct = event.product;
+      yield UpdatingOrder();
+      yield SelectingAmount(completeOrder: orderService.completeOrder);
+    }
     if(event is SelectClient){
       orderService.order.clientId = event.client.id;
       orderService.completeOrder.client = event.client;
@@ -63,6 +68,11 @@ class AddProduct extends OrderBlocEvent{
   AddProduct({this.product, this.amount});
 }
 
+class SelectProduct extends OrderBlocEvent{
+  final Product product;
+  SelectProduct({this.product});
+}
+
 class SelectClient extends OrderBlocEvent{
   final Client client;
 
@@ -92,3 +102,8 @@ class MakingOrder extends OrderBlocState{}
 class OrderMade extends OrderBlocState{}
 
 class OrderNotMade extends OrderBlocState{}
+
+class SelectingAmount extends OrderBlocState{
+  final CompleteOrder completeOrder;
+  SelectingAmount({this.completeOrder});
+}

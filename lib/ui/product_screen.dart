@@ -178,7 +178,8 @@ class _ProductScreenState extends State<ProductScreen> {
                     if(value.isEmpty)
                       return "O campo Preço não pode estar vazio.";
                     try{
-                      double.parse(value);
+                      if(double.parse(value) < 0)
+                        return "O valor inserido não pode ser menor que 0.";
                       return null;
                     } catch(e){
                       return "O valor inserido é inválido.";

@@ -25,6 +25,11 @@ CompleteOrder _$CompleteOrderFromJson(Map json) {
     value: (json['value'] as num)?.toDouble(),
     discount: (json['discount'] as num)?.toDouble(),
     totalValue: (json['totalValue'] as num)?.toDouble(),
+    currentProduct: json['currentProduct'] == null
+        ? null
+        : Product.fromJson((json['currentProduct'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
   );
 }
 
@@ -45,6 +50,7 @@ Map<String, dynamic> _$CompleteOrderToJson(CompleteOrder instance) {
   writeNotNull('value', instance.value);
   writeNotNull('discount', instance.discount);
   writeNotNull('totalValue', instance.totalValue);
+  writeNotNull('currentProduct', instance.currentProduct?.toJson());
   return val;
 }
 

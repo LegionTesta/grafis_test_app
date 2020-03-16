@@ -15,8 +15,9 @@ class CompleteOrder{
   double value;
   double discount;
   double totalValue;
+  Product currentProduct;
 
-  CompleteOrder({this.id, this.date, this.products, this.client, this.value, this.discount, this.totalValue});
+  CompleteOrder({this.id, this.date, this.products, this.client, this.value, this.discount, this.totalValue, this.currentProduct});
 
   factory CompleteOrder.fromJson(Map<String, dynamic> json) => _$CompleteOrderFromJson(json);
   Map<String, dynamic> toJson() => _$CompleteOrderToJson(this);
