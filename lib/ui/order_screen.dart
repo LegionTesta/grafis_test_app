@@ -88,15 +88,26 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget buildClientsList(BuildContext context, List<Client> clients){
     return Expanded(
       child: Container(
-        child: ListView.builder(
-            itemCount: clients.length,
-            itemBuilder: (BuildContext context, index){
-              return ListTile(
-                title: Text(clients[index].name),
-                subtitle: Text(clients[index].email),
-              );
-            }
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text("Clientes"),
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: clients.length,
+                itemBuilder: (BuildContext context, index){
+                  return Card(
+                    child: ListTile(
+                      title: Text(clients[index].name),
+                      subtitle: Text(clients[index].email),
+                    ),
+                  );
+                }
+            ),
+          ],
+        )
       ),
     );
   }
@@ -104,12 +115,15 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget buildProductsList(BuildContext context, List<Product> products){
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: ListView.builder(
             itemCount: products.length,
             itemBuilder: (BuildContext context, index){
-              return ListTile(
-                title: Text(products[index].desc),
-                subtitle: Text(products[index].price.toString()),
+              return Card(
+                child: ListTile(
+                  title: Text(products[index].desc),
+                  subtitle: Text("R\$ ${products[index].price.toStringAsFixed(2)}"),
+                ),
               );
             }
         ),

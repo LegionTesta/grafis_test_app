@@ -126,12 +126,15 @@ class _ClientScreenState extends State<ClientScreen> {
   Widget buildClientsList(BuildContext context, List<Client> clients){
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: ListView.builder(
           itemCount: clients.length,
           itemBuilder: (BuildContext context, index){
-            return ListTile(
-              title: Text(clients[index].name),
-              subtitle: Text(clients[index].email),
+            return Card(
+              child: ListTile(
+                title: Text(clients[index].name),
+                subtitle: Text(clients[index].email),
+              ),
             );
           }
         ),
@@ -142,6 +145,7 @@ class _ClientScreenState extends State<ClientScreen> {
   Widget buildRegisterClientForm(BuildContext context){
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: Form(
           key: _formKey,
           child: Column(

@@ -21,13 +21,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
               child: Text("Menu"),
             ),
             ListTile(
-              title: Text("Produtos"),
-              onTap: onProductsTap,
-            ),
-            ListTile(
               title: Text("Clientes"),
               onTap: onClientsTap,
             ),
+            ListTile(
+              title: Text("Produtos"),
+              onTap: onProductsTap,
+            ),
+
             ListTile(
               title: Text("Pedidos"),
               onTap: onOrdersTap,

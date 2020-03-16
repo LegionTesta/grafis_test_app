@@ -126,12 +126,15 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget buildProductsList(BuildContext context, List<Product> products){
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: ListView.builder(
             itemCount: products.length,
             itemBuilder: (BuildContext context, index){
-              return ListTile(
-                title: Text(products[index].desc),
-                subtitle: Text(products[index].price.toString()),
+              return Card(
+                child: ListTile(
+                  title: Text(products[index].desc),
+                  subtitle: Text("R\$ ${products[index].price.toStringAsFixed(2)}"),
+                ),
               );
             }
         ),
@@ -142,6 +145,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget buildRegisterProductForm(BuildContext context){
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: Form(
           key: _formKey,
           child: Column(
