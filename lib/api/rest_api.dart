@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class RestApi<T>{
+class RestApi{
 
   String baseRoute, finalRoute;
 
@@ -26,5 +26,4 @@ class RestApi<T>{
     aux.forEach((element) => data.add(element));
     return data;
   }
-
 }

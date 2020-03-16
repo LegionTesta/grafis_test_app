@@ -1,5 +1,4 @@
 
-
 import 'package:grafis_test_app/api/product_api.dart';
 import 'package:grafis_test_app/core/product.dart';
 
@@ -23,10 +22,6 @@ class ProductService{
     List<Product> products = List();
     productsJson.forEach((element) => products.add(Product.fromJson(element)));
     return products;
-  }
-
-  Future<Product> find({int id}) async{
-    //TODO
   }
 
   Future<Product> add({Product product}) async{

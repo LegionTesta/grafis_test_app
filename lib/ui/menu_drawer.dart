@@ -1,8 +1,8 @@
 
-
 import 'package:flutter/material.dart';
-import 'package:grafis_test_app/ui/client/client_screen.dart';
-import 'package:grafis_test_app/ui/product/product_screen.dart';
+import 'package:grafis_test_app/ui/client_screen.dart';
+import 'package:grafis_test_app/ui/order_screen.dart';
+import 'package:grafis_test_app/ui/product_screen.dart';
 
 class MenuDrawer extends StatefulWidget {
   @override
@@ -48,5 +48,8 @@ class _MenuDrawerState extends State<MenuDrawer> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ClientScreen()));
   }
 
-  void onOrdersTap(){}
+  void onOrdersTap(){
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => OrderScreen()));
+  }
 }

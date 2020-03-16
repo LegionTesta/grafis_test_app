@@ -27,18 +27,14 @@ class ClientRegisterBloc extends Bloc<ClientRegisterBlocEvent, ClientRegisterBlo
   }
 }
 
-abstract class ClientRegisterBlocEvent{
-  ClientRegisterBlocEvent({Client client});
-}
+abstract class ClientRegisterBlocEvent{}
 
 class RegisterClient extends ClientRegisterBlocEvent{
   final Client client;
   RegisterClient({this.client});
 }
 
-abstract class ClientRegisterBlocState{
-  ClientRegisterBlocState({String msg});
-}
+abstract class ClientRegisterBlocState{}
 
 class RegisteringClient extends ClientRegisterBlocState{}
 

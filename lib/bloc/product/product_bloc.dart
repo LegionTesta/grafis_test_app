@@ -29,9 +29,7 @@ abstract class ProductBlocEvent{}
 
 class ReloadProducts extends ProductBlocEvent{}
 
-abstract class ProductBlocState{
-  ProductBlocState({List<Product> products});
-}
+abstract class ProductBlocState{}
 
 class LoadingProducts extends ProductBlocState{}
 

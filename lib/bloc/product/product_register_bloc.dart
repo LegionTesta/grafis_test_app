@@ -27,18 +27,14 @@ class ProductRegisterBloc extends Bloc<ProductRegisterBlocEvent, ProductRegister
   }
 }
 
-abstract class ProductRegisterBlocEvent{
-  ProductRegisterBlocEvent({Product product});
-}
+abstract class ProductRegisterBlocEvent{}
 
 class RegisterProduct extends ProductRegisterBlocEvent{
   final Product product;
   RegisterProduct({this.product});
 }
 
-abstract class ProductRegisterBlocState{
-  ProductRegisterBlocState({String msg});
-}
+abstract class ProductRegisterBlocState{}
 
 class RegisteringProduct extends ProductRegisterBlocState{}
 

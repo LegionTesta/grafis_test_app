@@ -1,5 +1,4 @@
 
-
 import 'package:grafis_test_app/api/client_api.dart';
 import 'package:grafis_test_app/core/client.dart';
 
@@ -23,10 +22,6 @@ class ClientService{
     List<Client> clients = List();
     clientsJson.forEach((element) => clients.add(Client.fromJson(element)));
     return clients;
-  }
-
-  Future<Client> find({int id}) async{
-    //TODO
   }
 
   Future<Client> add({Client client}) async{

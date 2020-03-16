@@ -29,9 +29,7 @@ abstract class ClientBlocEvent{}
 
 class ReloadClients extends ClientBlocEvent{}
 
-abstract class ClientBlocState{
-  ClientBlocState({List<Client> clients});
-}
+abstract class ClientBlocState{}
 
 class LoadingClients extends ClientBlocState{}
 

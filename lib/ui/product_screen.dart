@@ -1,35 +1,33 @@
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grafis_test_app/bloc/client/client_bloc.dart';
-import 'package:grafis_test_app/bloc/client/client_register_bloc.dart';
-import 'package:grafis_test_app/core/client.dart';
+import 'package:grafis_test_app/bloc/product/product_bloc.dart';
+import 'package:grafis_test_app/bloc/product/product_register_bloc.dart';
+import 'package:grafis_test_app/core/product.dart';
 import 'package:grafis_test_app/ui/menu_drawer.dart';
 
-class ClientScreen extends StatefulWidget {
+class ProductScreen extends StatefulWidget {
   @override
-  _ClientScreenState createState() => _ClientScreenState();
+  _ProductScreenState createState() => _ProductScreenState();
 }
 
-class _ClientScreenState extends State<ClientScreen> {
+class _ProductScreenState extends State<ProductScreen> {
 
-  ClientBloc _clientBloc;
-  ClientRegisterBloc _clientRegisterBloc;
+  ProductBloc _productBloc;
+  ProductRegisterBloc _productRegisterBloc;
 
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
 
   @override
   void initState() {
-    _clientBloc = ClientBloc();
-    _clientBloc.add(ReloadClients());
-    _clientRegisterBloc = ClientRegisterBloc();
-    _clientRegisterBloc.listen((state) {
-      if(state is RegisteringClient){
+    _productBloc = ProductBloc();
+    _productBloc.add(ReloadProducts());
+    _productRegisterBloc = ProductRegisterBloc();
+    _productRegisterBloc.listen((state) {
+      if(state is RegisteringProduct){
         showDialog(
             context: context,
             builder: (BuildContext context){
@@ -39,13 +37,13 @@ class _ClientScreenState extends State<ClientScreen> {
             }
         );
       }
-      if(state is ClientRegistered){
+      if(state is ProductRegistered){
         Navigator.pop(context);
         showDialog(
             context: context,
             builder: (BuildContext context){
               return AlertDialog(
-                content: Text("O cliente foi registrado!"),
+                content: Text("O produto foi registrado!"),
                 actions: <Widget>[
                   FlatButton(
                     child: Text("Ok"),
@@ -57,17 +55,17 @@ class _ClientScreenState extends State<ClientScreen> {
               );
             }
         );
-        nameController.text = "";
-        emailController.text = "";
-        _clientBloc.add(ReloadClients());
+        descController.text = "";
+        priceController.text = "";
+        _productBloc.add(ReloadProducts());
       }
-      if(state is ClientNotRegistered){
+      if(state is ProductNotRegistered){
         Navigator.pop(context);
         showDialog(
             context: context,
             builder: (BuildContext context){
               return AlertDialog(
-                content: Text("O cliente não foi registrado!"),
+                content: Text("O produto não foi registrado!"),
                 actions: <Widget>[
                   FlatButton(
                     child: Text("Ok"),
@@ -88,32 +86,32 @@ class _ClientScreenState extends State<ClientScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        drawer: MenuDrawer(),
         appBar: AppBar(
-          title: Text("Clientes"),
+          title: Text("Produtos"),
         ),
+        drawer: MenuDrawer(),
         body: Container(
           child: Row(
             children: <Widget>[
               BlocBuilder(
-                  bloc: _clientBloc,
-                  builder: (BuildContext context, ClientBlocState state){
-                    if(state is LoadingClients){
+                  bloc: _productBloc,
+                  builder: (BuildContext context, ProductBlocState state){
+                    if(state is LoadingProducts){
                       return Center(
-                        child: Text("Carregando clientes..."),
+                        child: Text("Carregando produtos..."),
                       );
                     }
-                    if(state is ClientsLoaded){
-                      return buildClientsList(context, state.clients);
+                    if(state is ProductsLoaded){
+                      return buildProductsList(context, state.products);
                     }
                     return Container();
                   }
               ),
               BlocBuilder(
-                  bloc: _clientRegisterBloc,
-                  builder: (BuildContext context, ClientRegisterBlocState state){
-                    if(state is InitialClientRegisterBlocState){
-                      return buildRegisterClientForm(context);
+                  bloc: _productRegisterBloc,
+                  builder: (BuildContext context, ProductRegisterBlocState state){
+                    if(state is InitialProductRegisterBlocState){
+                      return buildRegisterProductForm(context);
                     }
                     return Container();
                   }
@@ -125,23 +123,23 @@ class _ClientScreenState extends State<ClientScreen> {
     );
   }
 
-  Widget buildClientsList(BuildContext context, List<Client> clients){
+  Widget buildProductsList(BuildContext context, List<Product> products){
     return Expanded(
       child: Container(
         child: ListView.builder(
-          itemCount: clients.length,
-          itemBuilder: (BuildContext context, index){
-            return ListTile(
-              title: Text(clients[index].name),
-              subtitle: Text(clients[index].email),
-            );
-          }
+            itemCount: products.length,
+            itemBuilder: (BuildContext context, index){
+              return ListTile(
+                title: Text(products[index].desc),
+                subtitle: Text(products[index].price.toString()),
+              );
+            }
         ),
       ),
     );
   }
 
-  Widget buildRegisterClientForm(BuildContext context){
+  Widget buildRegisterProductForm(BuildContext context){
     return Expanded(
       child: Container(
         child: Form(
@@ -151,31 +149,36 @@ class _ClientScreenState extends State<ClientScreen> {
             children: <Widget>[
               Container(
                 child: TextFormField(
-                  controller: nameController,
+                  controller: descController,
                   decoration: InputDecoration(
-                      icon: Icon(Icons.person),
-                      hintText: "Insira o nome do cliente",
-                      labelText: "Nome"
+                      icon: Icon(Icons.description),
+                      hintText: "Insira a descrição do produto",
+                      labelText: "Descrição"
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Nome não pode estar vazio.";
+                      return "O campo Descrição não pode estar vazio.";
                     return null;
                   },
                 ),
               ),
               Container(
                 child: TextFormField(
-                  controller: emailController,
+                  controller: priceController,
                   decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      hintText: "Insira o email do cliente",
-                      labelText: "Email"
+                      icon: Icon(Icons.attach_money),
+                      hintText: "Insira o preço do produto",
+                      labelText: "Preço"
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Email não pode estar vazio.";
-                    return null;
+                      return "O campo Preço não pode estar vazio.";
+                    try{
+                      double.parse(value);
+                      return null;
+                    } catch(e){
+                      return "O valor inserido é inválido.";
+                    }
                   },
                 ),
               ),
@@ -183,9 +186,9 @@ class _ClientScreenState extends State<ClientScreen> {
                 child: RaisedButton(
                   onPressed: (){
                     if(_formKey.currentState.validate()){
-                      _clientRegisterBloc.add(RegisterClient(client: Client(
-                          name: nameController.text,
-                          email: emailController.text
+                      _productRegisterBloc.add(RegisterProduct(product: Product(
+                          desc: descController.text,
+                          price: double.parse(priceController.text)
                       )));
                     }
                   },
