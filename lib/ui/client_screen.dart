@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_bloc.dart';
@@ -20,6 +21,8 @@ class _ClientScreenState extends State<ClientScreen> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  List<Client> filteredClients = List();
 
   @override
   void initState() {
@@ -102,6 +105,7 @@ class _ClientScreenState extends State<ClientScreen> {
                       );
                     }
                     if(state is ClientsLoaded){
+                      filteredClients = state.clients;
                       return buildClientsList(context, state.clients);
                     }
                     return Container();
@@ -124,20 +128,47 @@ class _ClientScreenState extends State<ClientScreen> {
   }
 
   Widget buildClientsList(BuildContext context, List<Client> clients){
+    var aux = List();
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: ListView.builder(
-          itemCount: clients.length,
-          itemBuilder: (BuildContext context, index){
-            return Card(
-              child: ListTile(
-                title: Text(clients[index].name),
-                subtitle: Text(clients[index].email),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: "Procure por Nome ou Email..."
               ),
-            );
-          }
-        ),
+              onChanged: (value){
+                print(aux.length);
+                setState(() {
+                  aux = clients.where((element) =>
+                      (element.name.toLowerCase().contains(value.toLowerCase())) ||
+                      (element.email.toLowerCase().contains(value.toLowerCase()))
+                  ).toList();
+                  print(aux.length);
+                  filteredClients = aux;
+                });
+                setState(() {});
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: ListView.builder(
+                  itemCount: filteredClients.length,
+                  itemBuilder: (BuildContext context, index){
+                    return Card(
+                      child: ListTile(
+                        title: Text(filteredClients[index].name),
+                        subtitle: Text(filteredClients[index].email),
+                      ),
+                    );
+                  }
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
