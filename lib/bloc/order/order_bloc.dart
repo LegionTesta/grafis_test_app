@@ -12,31 +12,40 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
   OrderBlocState get initialState => InitialOrderBlocState();
 
   Stream<OrderBlocState> mapEventToState(OrderBlocEvent event) async*{
+
     if(event is SelectProduct){
       orderService.completeOrder.currentProduct = event.product;
       yield UpdatingOrder();
       yield SelectingAmount(completeOrder: orderService.completeOrder);
     }
+
     if(event is SelectClient){
       orderService.order.clientId = event.client.id;
       orderService.completeOrder.client = event.client;
       yield UpdatingOrder();
       yield OrderUpdated(completeOrder: orderService.completeOrder);
     }
+
     if(event is AddProduct){
+      if(orderService.order.products == null)
+        orderService.order.products = List<OrderProduct>();
       orderService.order.products.add(OrderProduct(
         productId: event.product.id,
         amount: event.amount
       ));
+      if(orderService.completeOrder.products == null)
+        orderService.completeOrder.products = List<CompleteOrderProduct>();
       orderService.completeOrder.products.add(CompleteOrderProduct(
         product: event.product,
         amount: event.amount
       ));
       orderService.completeOrder.value = orderService.calculateValue();
       orderService.completeOrder.totalValue = orderService.calculateTotalValue();
+      orderService.completeOrder.currentProduct = null;
       yield UpdatingOrder();
       yield OrderUpdated(completeOrder: orderService.completeOrder);
     }
+
     if(event is AddDiscount){
       orderService.order.discount = event.discount;
       orderService.completeOrder.discount = event.discount;
@@ -44,6 +53,7 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
       yield UpdatingOrder();
       yield OrderUpdated(completeOrder: orderService.completeOrder);
     }
+
     if(event is MakeOrder){
       try{
         yield MakingOrder();

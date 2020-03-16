@@ -161,7 +161,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Descrição não pode estar vazio.";
+                      return "Campo Descrição vazio.";
                     return null;
                   },
                 ),
@@ -176,13 +176,13 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Preço não pode estar vazio.";
+                      return "Campo Preço vazio.";
                     try{
                       if(double.parse(value) < 0)
-                        return "O valor inserido não pode ser menor que 0.";
+                        return "Valor inserido menor que 0.";
                       return null;
                     } catch(e){
-                      return "O valor inserido é inválido.";
+                      return "Valor inserido inválido.";
                     }
                   },
                 ),

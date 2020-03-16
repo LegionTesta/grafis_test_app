@@ -1,7 +1,6 @@
 
 import 'package:grafis_test_app/api/order_api.dart';
 import 'package:grafis_test_app/core/order.dart';
-import 'package:grafis_test_app/core/product.dart';
 
 class OrderService{
 
@@ -20,7 +19,6 @@ class OrderService{
 
   Order order = Order();
   CompleteOrder completeOrder = CompleteOrder(discount: 0);
-  Product currentProduct;
 
   double calculateValue(){
     double value = 0;

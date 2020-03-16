@@ -9,12 +9,12 @@ import 'package:grafis_test_app/core/order.dart';
 import 'package:grafis_test_app/core/product.dart';
 import 'package:grafis_test_app/ui/menu_drawer.dart';
 
-class OrderScreen extends StatefulWidget {
+class NewOrderScreen extends StatefulWidget {
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  _NewOrderScreenState createState() => _NewOrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _NewOrderScreenState extends State<NewOrderScreen> {
 
   ClientBloc _clientBloc;
   ProductBloc _productBloc;
@@ -120,6 +120,59 @@ class _OrderScreenState extends State<OrderScreen> {
                           title: completeOrder != null? completeOrder.currentProduct != null ?
                               Text("Produto: ${completeOrder.currentProduct.desc}") : Text("Produto: ") : Text("Produto: "),
                         ),
+                        ListTile(
+                          title: Form(
+                            key: _amountFormKey,
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 100,
+                                  child: Text("Quantidade:"),
+                                ),
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: amountController,
+                                    validator: (value){
+                                      if(completeOrder != null){
+                                        if(completeOrder.client == null)
+                                          return "Selecione um Cliente.";
+                                        if(completeOrder.currentProduct == null)
+                                          return "Selecione um Produto.";
+                                      } else {
+                                        return "Selecione um Cliente";
+                                      }
+                                      if(value.isEmpty)
+                                        return "Campo Quantidade vazio.";
+                                      try{
+                                        if(double.parse(value) < 0)
+                                          return "Valor inserido menor que 0.";
+                                        return null;
+                                      } catch(e){
+                                        return "Valor inserido inválido.";
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 93,
+                                  child: RaisedButton(
+                                    onPressed: (){
+                                      if(_amountFormKey.currentState.validate()){
+                                        _orderBloc.add(AddProduct(
+                                          product: completeOrder.currentProduct,
+                                          amount: double.parse(amountController.text)
+                                        ));
+                                        amountController.text = "";
+                                      }
+                                    },
+                                    child: Text("Adicionar"),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ),
+                        buildOrderProductsList(context, completeOrder)
                       ],
                     ),
                   )
@@ -129,6 +182,39 @@ class _OrderScreenState extends State<OrderScreen> {
           )
       ),
     );
+  }
+
+  Widget buildOrderProductsList(BuildContext context, CompleteOrder completeOrder){
+    if(completeOrder != null)
+      if(completeOrder.products != null){
+        var products = completeOrder.products;
+        return Container(
+            alignment: Alignment.topLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, index){
+                      return ListTile(
+                        title: Text(
+                            "${products[index].amount}x ${products[index].product.desc}"
+                        ),
+                        subtitle: Text("R\$ ${products[index].product.price.toStringAsFixed(2)}"),
+                        trailing: RaisedButton(
+                          onPressed: (){
+                          },
+                          child: Text("TODO: Add/Remove"),
+                        ),
+                      );
+                    }
+                ),
+              ],
+            )
+        );
+      }
+    return Container();
   }
 
   Widget buildClientsList(BuildContext context, List<Client> clients){

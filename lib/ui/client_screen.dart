@@ -161,7 +161,7 @@ class _ClientScreenState extends State<ClientScreen> {
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Nome não pode estar vazio.";
+                      return "Campo Nome vazio.";
                     return null;
                   },
                 ),
@@ -176,7 +176,7 @@ class _ClientScreenState extends State<ClientScreen> {
                   ),
                   validator: (value){
                     if(value.isEmpty)
-                      return "O campo Email não pode estar vazio.";
+                      return "Campo Email vazio.";
                     return null;
                   },
                 ),
