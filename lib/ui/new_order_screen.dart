@@ -26,8 +26,10 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
   List<Client> clients = List();
 
   final _amountFormKey = GlobalKey<FormState>();
+  final _discountFormKey = GlobalKey<FormState>();
 
   TextEditingController amountController = TextEditingController();
+  TextEditingController discountController = TextEditingController(text: "0.00");
 
   @override
   void initState() {
@@ -36,6 +38,56 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     _orderBloc = OrderBloc();
     _clientBloc.add(ReloadClients());
     _productBloc.add(ReloadProducts());
+    _orderBloc.listen((state) {
+      if(state is MakingOrder){
+        showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                content: Text("Carregando..."),
+              );
+            }
+        );
+      }
+      if(state is OrderMade){
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                content: Text("O pedido foi registrado!"),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Ok"),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            }
+        );
+      }
+      if(state is OrderNotMade){
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                content: Text("O pedido não foi registrado!\n${state.msg}"),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Ok"),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            }
+        );
+      }
+    });
     super.initState();
   }
 
@@ -94,7 +146,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                 bloc: _orderBloc,
                   builder: (BuildContext context, OrderBlocState state){
                     if(state is InitialOrderBlocState){
-                      return buildOrder(context, null);
+                      return buildOrder(context, state.completeOrder);
                     }
                     if(state is OrderUpdated){
                       return buildOrder(context, state.completeOrder);
@@ -130,10 +182,6 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                     child: Column(
                       children: <Widget>[
                         ListTile(
-                          title: completeOrder != null ? completeOrder.client != null ?
-                              Text("Cliente: ${completeOrder.client.name}") : Text("Cliente: ") : Text("Cliente: "),
-                        ),
-                        ListTile(
                           title: completeOrder != null? completeOrder.currentProduct != null ?
                               Text("Produto: ${completeOrder.currentProduct.desc}") : Text("Produto: ") : Text("Produto: "),
                         ),
@@ -151,12 +199,10 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                     controller: amountController,
                                     validator: (value){
                                       if(completeOrder != null){
-                                        if(completeOrder.client == null)
-                                          return "Selecione um Cliente.";
                                         if(completeOrder.currentProduct == null)
                                           return "Selecione um Produto.";
                                       } else {
-                                        return "Selecione um Cliente";
+                                        return "Selecione um Produto.";
                                       }
                                       if(value.isEmpty)
                                         return "Campo Quantidade vazio.";
@@ -169,6 +215,9 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                       }
                                     },
                                   ),
+                                ),
+                                SizedBox(
+                                  width: 5,
                                 ),
                                 SizedBox(
                                   width: 93,
@@ -189,7 +238,79 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                             ),
                           )
                         ),
-                        buildOrderProductsList(context, completeOrder)
+                        buildOrderProductsList(context, completeOrder),
+                        ListTile(
+                          title: completeOrder != null ? completeOrder.value != null ?
+                              Text("Subtotal: R\$${completeOrder.value.toStringAsFixed(2)}")
+                              : Text("Subtotal: R\$0.00") : Text("Subtotal: R\$0.00"),
+                        ),
+                        ListTile(
+                            title: Form(
+                              key: _discountFormKey,
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 100,
+                                    child: Text("Desconto:"),
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: discountController,
+                                      validator: (value){
+                                        try{
+                                          double discount = double.parse(value);
+                                          if(discount <= 0)
+                                            return "Valor inserido menor ou igual a 0.";
+                                          if(completeOrder.value < discount)
+                                            return "Desconto maior que o valor da venda.";
+                                          return null;
+                                        } catch(e){
+                                          return "Valor inserido inválido.";
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  SizedBox(
+                                    width: 93,
+                                    child: RaisedButton(
+                                      onPressed: (){
+                                        if(_discountFormKey.currentState.validate()){
+                                          _orderBloc.add(AddDiscount(
+                                              discount: double.parse(discountController.text)
+                                          ));
+                                          discountController.text = "";
+                                        }
+                                      },
+                                      child: Text("Adicionar"),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                        ),
+                        ListTile(
+                          title: completeOrder != null ? completeOrder.totalValue != null ?
+                          Text("Valor Total: R\$${completeOrder.totalValue.toStringAsFixed(2)}")
+                              : Text("Valor Total: R\$0.00") : Text("Valor Total: R\$0.00"),
+                          subtitle: completeOrder != null ? completeOrder.totalValue != null ?
+                          Text("R\$${completeOrder.value.toStringAsFixed(2)} - R\$${completeOrder.discount.toStringAsFixed(2)}")
+                              : Text("") : Text(""),
+                        ),
+                        ListTile(
+                          title: completeOrder != null ? completeOrder.client != null ?
+                          Text("Cliente: ${completeOrder.client.name}") : Text("Cliente: ") : Text("Cliente: "),
+                        ),
+                        ListTile(
+                          title: RaisedButton(
+                            child: Text("Fazer pedido."),
+                            onPressed: (){
+                              _orderBloc.add(MakeOrder());
+                            },
+                          ),
+                        )
                       ],
                     ),
                   )

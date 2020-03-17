@@ -16,12 +16,9 @@ class ClientRegisterBloc extends Bloc<ClientRegisterBlocEvent, ClientRegisterBlo
         yield RegisteringClient();
         Client client = await clientService.add(client: event.client);
         if(client.Message == null){
-          print(client.Message);
           yield ClientRegistered();
           yield InitialClientRegisterBlocState();
-        } else{
-          print(client.Message);
-          print(client.Message);
+        } else {
           yield ClientNotRegistered(msg: client.Message);
           yield InitialClientRegisterBlocState();
         }

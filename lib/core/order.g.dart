@@ -30,7 +30,7 @@ CompleteOrder _$CompleteOrderFromJson(Map json) {
         : Product.fromJson((json['currentProduct'] as Map)?.map(
             (k, e) => MapEntry(k as String, e),
           )),
-    message: json['message'] as String,
+    Message: json['Message'] as String,
   );
 }
 
@@ -52,7 +52,7 @@ Map<String, dynamic> _$CompleteOrderToJson(CompleteOrder instance) {
   writeNotNull('discount', instance.discount);
   writeNotNull('totalValue', instance.totalValue);
   writeNotNull('currentProduct', instance.currentProduct?.toJson());
-  writeNotNull('message', instance.message);
+  writeNotNull('Message', instance.Message);
   return val;
 }
 
@@ -64,7 +64,7 @@ CompleteOrderProduct _$CompleteOrderProductFromJson(Map json) {
             (k, e) => MapEntry(k as String, e),
           )),
     amount: (json['amount'] as num)?.toDouble(),
-    message: json['message'] as String,
+    Message: json['Message'] as String,
   );
 }
 
@@ -80,7 +80,7 @@ Map<String, dynamic> _$CompleteOrderProductToJson(
 
   writeNotNull('product', instance.product?.toJson());
   writeNotNull('amount', instance.amount);
-  writeNotNull('message', instance.message);
+  writeNotNull('Message', instance.Message);
   return val;
 }
 
@@ -95,7 +95,7 @@ Order _$OrderFromJson(Map json) {
         ?.toList(),
     clientId: json['clientId'] as int,
     discount: (json['discount'] as num)?.toDouble(),
-    message: json['message'] as String,
+    Message: json['Message'] as String,
   );
 }
 
@@ -112,7 +112,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
       'products', instance.products?.map((e) => e?.toJson())?.toList());
   writeNotNull('clientId', instance.clientId);
   writeNotNull('discount', instance.discount);
-  writeNotNull('message', instance.message);
+  writeNotNull('Message', instance.Message);
   return val;
 }
 
@@ -120,7 +120,7 @@ OrderProduct _$OrderProductFromJson(Map json) {
   return OrderProduct(
     productId: json['productId'] as int,
     amount: (json['amount'] as num)?.toDouble(),
-    message: json['message'] as String,
+    Message: json['Message'] as String,
   );
 }
 
@@ -135,6 +135,6 @@ Map<String, dynamic> _$OrderProductToJson(OrderProduct instance) {
 
   writeNotNull('productId', instance.productId);
   writeNotNull('amount', instance.amount);
-  writeNotNull('message', instance.message);
+  writeNotNull('Message', instance.Message);
   return val;
 }

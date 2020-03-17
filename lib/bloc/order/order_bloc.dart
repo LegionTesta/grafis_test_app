@@ -57,9 +57,23 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
     if(event is MakeOrder){
       try{
         yield MakingOrder();
-        await orderService.add(order: orderService.order);
-        yield OrderMade();
-        yield InitialOrderBlocState();
+        if(orderService.completeOrder.value == null) {
+          yield OrderNotMade(msg: "Nenhum item inserido.");
+          yield InitialOrderBlocState(completeOrder: orderService.completeOrder);
+        } else if(orderService.completeOrder.client == null) {
+          yield OrderNotMade(msg: "Cliente não selecionado.");
+          yield InitialOrderBlocState(completeOrder: orderService.completeOrder);
+        } else {
+          CompleteOrder completeOrder = await orderService.add(order: orderService.order);
+          if(completeOrder.Message == null){
+            orderService.completeOrder = CompleteOrder(discount: 0);
+            orderService.order = Order();
+            yield OrderMade();
+            yield InitialOrderBlocState();
+          } else {
+            yield OrderNotMade(msg: completeOrder.Message);
+          }
+        }
       } catch(e, s){
         print("Exception: $e\n");
         print("Stack: $s\n");
@@ -105,13 +119,19 @@ class OrderUpdated extends OrderBlocState{
 
 class UpdatingOrder extends OrderBlocState{}
 
-class InitialOrderBlocState extends OrderBlocState{}
+class InitialOrderBlocState extends OrderBlocState{
+  final CompleteOrder completeOrder;
+  InitialOrderBlocState({this.completeOrder});
+}
 
 class MakingOrder extends OrderBlocState{}
 
 class OrderMade extends OrderBlocState{}
 
-class OrderNotMade extends OrderBlocState{}
+class OrderNotMade extends OrderBlocState{
+  final String msg;
+  OrderNotMade({this.msg});
+}
 
 class SelectingAmount extends OrderBlocState{
   final CompleteOrder completeOrder;
