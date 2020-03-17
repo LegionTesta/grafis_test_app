@@ -11,6 +11,7 @@ Client _$ClientFromJson(Map json) {
     id: json['id'] as int,
     name: json['name'] as String,
     email: json['email'] as String,
+    Message: json['Message'] as String,
   );
 }
 
@@ -26,5 +27,6 @@ Map<String, dynamic> _$ClientToJson(Client instance) {
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
   writeNotNull('email', instance.email);
+  writeNotNull('Message', instance.Message);
   return val;
 }

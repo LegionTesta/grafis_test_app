@@ -16,8 +16,10 @@ class CompleteOrder{
   double discount;
   double totalValue;
   Product currentProduct;
+  String message;
 
-  CompleteOrder({this.id, this.date, this.products, this.client, this.value, this.discount, this.totalValue, this.currentProduct});
+  CompleteOrder({this.id, this.date, this.products, this.client, this.value,
+    this.discount, this.totalValue, this.currentProduct, this.message});
 
   factory CompleteOrder.fromJson(Map<String, dynamic> json) => _$CompleteOrderFromJson(json);
   Map<String, dynamic> toJson() => _$CompleteOrderToJson(this);
@@ -28,8 +30,9 @@ class CompleteOrderProduct{
 
   Product product;
   double amount;
+  String message;
 
-  CompleteOrderProduct({this.product, this.amount});
+  CompleteOrderProduct({this.product, this.amount, this.message});
 
   factory CompleteOrderProduct.fromJson(Map<String, dynamic> json) => _$CompleteOrderProductFromJson(json);
   Map<String, dynamic> toJson() => _$CompleteOrderProductToJson(this);
@@ -41,8 +44,9 @@ class Order{
   List<OrderProduct> products;
   int clientId;
   double discount;
+  String message;
 
-  Order({this.products, this.clientId, this.discount});
+  Order({this.products, this.clientId, this.discount, this.message});
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
   Map<String, dynamic> toJson() => _$OrderToJson(this);
@@ -53,8 +57,9 @@ class OrderProduct{
 
   int productId;
   double amount;
+  String message;
 
-  OrderProduct({this.productId, this.amount});
+  OrderProduct({this.productId, this.amount, this.message});
 
   factory OrderProduct.fromJson(Map<String, dynamic> json) => _$OrderProductFromJson(json);
   Map<String, dynamic> toJson() => _$OrderProductToJson(this);

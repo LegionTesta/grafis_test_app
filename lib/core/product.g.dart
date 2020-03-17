@@ -11,6 +11,7 @@ Product _$ProductFromJson(Map json) {
     id: json['id'] as int,
     desc: json['desc'] as String,
     price: (json['price'] as num)?.toDouble(),
+    message: json['message'] as String,
   );
 }
 
@@ -26,5 +27,6 @@ Map<String, dynamic> _$ProductToJson(Product instance) {
   writeNotNull('id', instance.id);
   writeNotNull('desc', instance.desc);
   writeNotNull('price', instance.price);
+  writeNotNull('message', instance.message);
   return val;
 }

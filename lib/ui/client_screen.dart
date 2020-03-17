@@ -70,7 +70,7 @@ class _ClientScreenState extends State<ClientScreen> {
             context: context,
             builder: (BuildContext context){
               return AlertDialog(
-                content: Text("O cliente não foi registrado!"),
+                content: Text("O cliente não foi registrado!\n${state.msg ?? "Erro no servidor"}"),
                 actions: <Widget>[
                   FlatButton(
                     child: Text("Ok"),

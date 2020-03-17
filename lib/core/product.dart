@@ -9,8 +9,9 @@ class Product{
   int id;
   String desc;
   double price;
+  String message;
 
-  Product({this.id, this.desc, this.price});
+  Product({this.id, this.desc, this.price, this.message});
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
   Map<String, dynamic> toJson() => _$ProductToJson(this);

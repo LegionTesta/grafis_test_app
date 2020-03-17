@@ -14,9 +14,17 @@ class ClientRegisterBloc extends Bloc<ClientRegisterBlocEvent, ClientRegisterBlo
     if(event is RegisterClient){
       try{
         yield RegisteringClient();
-        await clientService.add(client: event.client);
-        yield ClientRegistered();
-        yield InitialClientRegisterBlocState();
+        Client client = await clientService.add(client: event.client);
+        if(client.Message == null){
+          print(client.Message);
+          yield ClientRegistered();
+          yield InitialClientRegisterBlocState();
+        } else{
+          print(client.Message);
+          print(client.Message);
+          yield ClientNotRegistered(msg: client.Message);
+          yield InitialClientRegisterBlocState();
+        }
       } catch(e, s){
         print("Exception: $e\n");
         print("Stack: $s\n");
