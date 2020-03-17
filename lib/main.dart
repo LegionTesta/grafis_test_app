@@ -11,6 +11,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        buttonColor: Colors.blue,
+        buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.primary
+        )
       ),
       home: ClientScreen(),
     );

@@ -220,7 +220,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                   width: 5,
                                 ),
                                 SizedBox(
-                                  width: 93,
+                                  width: 120,
                                   child: RaisedButton(
                                     onPressed: (){
                                       if(_amountFormKey.currentState.validate()){
@@ -274,7 +274,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                     width: 5,
                                   ),
                                   SizedBox(
-                                    width: 93,
+                                    width: 120,
                                     child: RaisedButton(
                                       onPressed: (){
                                         if(_discountFormKey.currentState.validate()){
