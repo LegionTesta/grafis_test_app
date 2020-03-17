@@ -6,6 +6,7 @@ import 'package:grafis_test_app/bloc/client/client_bloc.dart';
 import 'package:grafis_test_app/bloc/client/client_register_bloc.dart';
 import 'package:grafis_test_app/core/client.dart';
 import 'package:grafis_test_app/ui/menu_drawer.dart';
+import 'package:string_validator/string_validator.dart';
 
 class ClientScreen extends StatefulWidget {
   @override
@@ -204,6 +205,8 @@ class _ClientScreenState extends State<ClientScreen> {
                   validator: (value){
                     if(value.isEmpty)
                       return "Campo Email vazio.";
+                    if(!isEmail(value))
+                      return "Email inválido.";
                     return null;
                   },
                 ),

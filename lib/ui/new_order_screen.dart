@@ -161,8 +161,8 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                       if(value.isEmpty)
                                         return "Campo Quantidade vazio.";
                                       try{
-                                        if(double.parse(value) < 0)
-                                          return "Valor inserido menor que 0.";
+                                        if(double.parse(value) <= 0)
+                                          return "Valor inserido menor ou igual a 0.";
                                         return null;
                                       } catch(e){
                                         return "Valor inserido inválido.";
@@ -222,7 +222,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                         trailing: RaisedButton(
                           onPressed: (){
                           },
-                          child: Text("TODO: Add/Remove"),
+                          child: Text("TODO: Remove"),
                         ),
                       );
                     }
