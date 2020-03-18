@@ -305,7 +305,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                         ),
                         ListTile(
                           title: RaisedButton(
-                            child: Text("Fazer pedido."),
+                            child: Text("Fazer pedido"),
                             onPressed: (){
                               _orderBloc.add(MakeOrder());
                             },

@@ -96,7 +96,7 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
       if(completeOrders.length != 0)
         yield OrdersLoaded(orders: completeOrders);
       else
-        yield OrdersNotLoaded(msg: "Ver isso aqui");
+        yield OrdersNotLoaded(msg: "Não há pedidos ou ocorreu um erro no servidor!");
     }
 
     if(event is FilterOrders){

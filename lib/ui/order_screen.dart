@@ -52,9 +52,6 @@ class _OrderScreenState extends State<OrderScreen> {
               if(state is OrdersNotLoaded){
                 return Text(state.msg);
               }
-              if(state is InitialOrderBlocState){
-                return Text("bb");
-              }
               return Text(state.toString());
             },
           ),

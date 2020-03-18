@@ -5,6 +5,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'order.g.dart';
 
+/*
+ Um CompleteOrder, diferente da classe Order, é um pedido completo contendo
+ todas as informações sobre o pedido, serve tanto para informar ao cliente na
+ UI o valor total da compra, como para receber da api a lista de pedidos.
+ */
 @JsonSerializable()
 class CompleteOrder{
 
@@ -25,6 +30,11 @@ class CompleteOrder{
   Map<String, dynamic> toJson() => _$CompleteOrderToJson(this);
 }
 
+/*
+  Um CompleteOrderProduct é o objeto utilizado na lista de produtos de um pedido
+  completo. Diferente do OrderProduct, esta classe contém todas as inforamções
+  de um produto.
+ */
 @JsonSerializable()
 class CompleteOrderProduct{
 
@@ -38,6 +48,10 @@ class CompleteOrderProduct{
   Map<String, dynamic> toJson() => _$CompleteOrderProductToJson(this);
 }
 
+/*
+  Classe utilizada para cadastrar um pedido no banco de dados. Contem somente as
+  informações necessárias para realizar um cadastro de pedido.
+ */
 @JsonSerializable()
 class Order{
 
@@ -52,6 +66,10 @@ class Order{
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 }
 
+/*
+  Classe utilizada na lista de produtos de um Order. Contem somente as informações
+  necessárias para realizar um cadastro de pedido.
+ */
 @JsonSerializable()
 class OrderProduct{
 
