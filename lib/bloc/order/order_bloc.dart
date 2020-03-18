@@ -80,10 +80,41 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
         yield OrderNotMade();
       }
     }
+
+    if(event is LoadOrders){
+      yield LoadingOrders();
+      List<CompleteOrder> completeOrders = await orderService.get();
+      if(completeOrders.length != 0)
+        yield OrdersLoaded(orders: completeOrders);
+      else
+        yield OrdersNotLoaded(msg: "Ver isso aqui");
+    }
+
+    if(event is FilterOrders){
+      yield LoadingOrders();
+      yield OrdersFiltered(orders: filterOrders(event.orders, event.filter));
+    }
+  }
+
+  List<CompleteOrder> filterOrders(List<CompleteOrder> orders, String filter){
+    orders.forEach((element) {element.products = filterProducts(element.products, filter);});
+    return orders.where((order) =>
+        order.client.name.toLowerCase().contains(filter.toLowerCase()) ||
+        order.client.email.toLowerCase().contains(filter.toLowerCase()) ||
+        order.date.toString().toLowerCase().contains(filter.toLowerCase())
+    ).toList();
+  }
+
+  List<CompleteOrderProduct> filterProducts(List<CompleteOrderProduct> products, String filter){
+    return products.where((product) =>
+      product.product.desc.toLowerCase().contains(filter.toLowerCase())
+    ).toList();
   }
 }
 
 abstract class OrderBlocEvent{}
+
+class LoadOrders extends OrderBlocEvent{}
 
 class AddProduct extends OrderBlocEvent{
   final Product product;
@@ -109,6 +140,12 @@ class AddDiscount extends OrderBlocEvent{
 }
 
 class MakeOrder extends OrderBlocEvent{}
+
+class FilterOrders extends OrderBlocEvent{
+  final String filter;
+  final List<CompleteOrder> orders;
+  FilterOrders({this.filter, this.orders});
+}
 
 abstract class OrderBlocState{}
 
@@ -137,3 +174,20 @@ class SelectingAmount extends OrderBlocState{
   final CompleteOrder completeOrder;
   SelectingAmount({this.completeOrder});
 }
+
+class OrdersLoaded extends OrderBlocState{
+  final List<CompleteOrder> orders;
+  OrdersLoaded({this.orders});
+}
+
+class OrdersFiltered extends OrderBlocState{
+  final List<CompleteOrder> orders;
+  OrdersFiltered({this.orders});
+}
+
+class OrdersNotLoaded extends OrderBlocState{
+  final String msg;
+  OrdersNotLoaded({this.msg});
+}
+
+class LoadingOrders extends OrderBlocState{}
