@@ -57,7 +57,7 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
     if(event is MakeOrder){
       try{
         yield MakingOrder();
-        if(orderService.completeOrder.value == null) {
+        if(orderService.completeOrder.value == null || orderService.completeOrder.value <= 0) {
           yield OrderNotMade(msg: "Nenhum item inserido.");
           yield InitialOrderBlocState(completeOrder: orderService.completeOrder);
         } else if(orderService.completeOrder.client == null) {
@@ -79,6 +79,15 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
         print("Stack: $s\n");
         yield OrderNotMade();
       }
+    }
+
+    if(event is RemoveProduct){
+      orderService.completeOrder.products.removeAt(event.productIndex);
+      orderService.order.products.removeAt(event.productIndex);
+      orderService.completeOrder.value = orderService.calculateValue();
+      orderService.completeOrder.totalValue = orderService.calculateTotalValue();
+      yield LoadingOrders();
+      yield OrderUpdated(completeOrder: orderService.completeOrder);
     }
 
     if(event is LoadOrders){
@@ -137,6 +146,11 @@ class AddDiscount extends OrderBlocEvent{
 }
 
 class MakeOrder extends OrderBlocEvent{}
+
+class RemoveProduct extends OrderBlocEvent{
+  final int productIndex;
+  RemoveProduct({this.productIndex});
+}
 
 class FilterOrders extends OrderBlocEvent{
   final String filter;

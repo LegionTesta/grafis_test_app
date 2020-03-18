@@ -342,8 +342,9 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                         subtitle: Text("R\$ ${products[index].product.price.toStringAsFixed(2)}"),
                         trailing: RaisedButton(
                           onPressed: (){
+                            _orderBloc.add(RemoveProduct(productIndex: index));
                           },
-                          child: Text("TODO: Remove"),
+                          child: Text("Remover Produto"),
                         ),
                       );
                     }
