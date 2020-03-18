@@ -94,8 +94,8 @@ class _OrderScreenState extends State<OrderScreen> {
                             child: Container(
                               alignment: Alignment.topLeft,
                               child: ListTile(
-                                title: Text(orders[index].client.name),
-                                subtitle: Text(orders[index].client.email),
+                                title: Text(filteredOrders[index].client.name),
+                                subtitle: Text(filteredOrders[index].client.email),
                               ),
                             ),
                           ),

@@ -97,17 +97,14 @@ class OrderBloc extends Bloc<OrderBlocEvent, OrderBlocState>{
   }
 
   List<CompleteOrder> filterOrders(List<CompleteOrder> orders, String filter){
-    orders.forEach((element) {element.products = filterProducts(element.products, filter);});
     return orders.where((order) =>
         order.client.name.toLowerCase().contains(filter.toLowerCase()) ||
         order.client.email.toLowerCase().contains(filter.toLowerCase()) ||
         order.date.toString().toLowerCase().contains(filter.toLowerCase())
-    ).toList();
-  }
-
-  List<CompleteOrderProduct> filterProducts(List<CompleteOrderProduct> products, String filter){
-    return products.where((product) =>
-      product.product.desc.toLowerCase().contains(filter.toLowerCase())
+        ||
+        order.products.where((product) =>
+            product.product.desc.toLowerCase().contains(filter.toLowerCase())
+        ).toList().length > 0
     ).toList();
   }
 }
